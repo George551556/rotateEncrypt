@@ -1,8 +1,9 @@
-// 换位加密算法https://baike.baidu.com/item/%E6%8D%A2%E4%BD%8D%E5%8A%A0%E5%AF%86%E6%B3%95/9684773#:~:text=%E6%8D%A2%E4%BD%8D%E5%8A%A0%E5%AF%86%E6%B3%95%EF%BC%88rotating,transpositioncipher%EF%BC%89%E6%98%AF%E9%87%8D%E6%96%B0%E6%8E%92%E5%88%97%E6%98%8E%E6%96%87%E4%B8%AD%E5%AD%97%E6%AF%8D%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%8A%A0%E5%AF%86%E6%B3%95
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 )
@@ -10,9 +11,10 @@ import (
 func main() {
 	var temp string
 	var slct int
-	var m string
+	var msg string
 	var key string
-	fmt.Println("选择[1加密] [2解密]：")
+
+	fmt.Println("选择[1:加密] [2:解密]: ")
 	fmt.Scanln(&temp)
 	slct, err := strconv.Atoi(temp)
 	if err != nil {
@@ -21,23 +23,28 @@ func main() {
 	if slct != 1 && slct != 2 {
 		panic("输入有误")
 	}
+
 	fmt.Println("请输入明文/密文：")
-	fmt.Scanln(&m)
+	reader := bufio.NewReader(os.Stdin)
+	msg, _ = reader.ReadString('\n')
+
 	fmt.Println("请输入密钥：")
-	fmt.Scanln(&key)
-	if len([]rune(key)) > len([]rune(m)) {
+	reader = bufio.NewReader(os.Stdin)
+	key, _ = reader.ReadString('\n')
+	if len([]rune(key)) > len([]rune(msg)) {
 		panic("明文/密文长度太短...")
 	}
+
 	if slct == 1 {
 		fmt.Println("加密结果：")
-		fmt.Println(en_myBubbleSort(key, m))
+		fmt.Println(en_myBubbleSort(key, msg))
 	} else {
 		fmt.Println("解密结果：")
-		fmt.Println(de_mydecryp(key, m))
+		fmt.Println(de_mydecryp(key, msg))
 	}
 
-	var end string
-	fmt.Scanln(&end)
+	// var end string
+	// fmt.Scanln(&end)
 	// m := "你好世界我34g45654h4是丁真测你的" //你好世界我是丁真测你的
 	// key := "314sdf5641"          //qweasdzxc12  21cxzdsaewq
 	// fmt.Printf("明文: %v\n", m)
