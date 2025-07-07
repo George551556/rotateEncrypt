@@ -6,6 +6,9 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"syscall"
+
+	"golang.org/x/term"
 )
 
 func main() {
@@ -28,9 +31,13 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	msg, _ = reader.ReadString('\n')
 
-	fmt.Println("请输入密钥：")
-	reader = bufio.NewReader(os.Stdin)
-	key, _ = reader.ReadString('\n')
+	fmt.Println("请输入密钥(不显示): ")
+	byteKey, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		panic("密钥输入错误")
+	}
+	key = string(byteKey)
+	fmt.Printf("key: %v\n", key)
 	if len([]rune(key)) > len([]rune(msg)) {
 		panic("明文/密文长度太短...")
 	}
