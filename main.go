@@ -17,50 +17,55 @@ func main() {
 	var slct int
 	var msg string
 	var key string
+	var err error
 
-	fmt.Println("选择[1:加密] [2:解密]: ")
-	fmt.Scanln(&temp)
-	slct, err := strconv.Atoi(temp)
-	if err != nil {
-		panic("输入错误")
-	}
-	if slct != 1 && slct != 2 {
-		panic("输入有误")
-	}
-
-	fmt.Println("请输入明文/密文：")
-	reader := bufio.NewReader(os.Stdin)
-	msg, _ = reader.ReadString('\n')
-	msg = strings.Trim(msg, "\n")
-
-	fmt.Println("请输入密钥(不显示): ")
-	byteKey := []byte{}
-	for i := 0; i < 2; i++ {
-		byteKey, err := term.ReadPassword(int(syscall.Stdin))
+	for {
+		fmt.Println("选择[1:加密] [2:解密]: ")
+		fmt.Scanln(&temp)
+		slct, err = strconv.Atoi(temp)
 		if err != nil {
-			panic("密钥输入错误")
+			panic("输入错误")
 		}
-		if len(byteKey) > 0 {
-			break
-		} else if i == 1 {
-			// 最后一次不输入密钥
-			fmt.Println()
-			panic("没有输入密钥...")
+		if slct != 1 && slct != 2 {
+			panic("输入有误")
 		}
-		fmt.Print("请输入密钥: ")
-	}
-	key = string(byteKey)
-	fmt.Printf("key: %v\n", key)
-	if len([]rune(key)) > len([]rune(msg)) {
-		panic("明文/密文长度太短...")
-	}
 
-	if slct == 1 {
-		fmt.Println("加密结果：")
-		fmt.Println(en_myBubbleSort(key, msg))
-	} else {
-		fmt.Println("解密结果：")
-		fmt.Println(de_mydecryp(key, msg))
+		fmt.Println("请输入明文/密文：")
+		reader := bufio.NewReader(os.Stdin)
+		msg, _ = reader.ReadString('\n')
+		msg = strings.Trim(msg, "\n")
+
+		fmt.Println("请输入密钥(不显示): ")
+		byteKey := []byte{}
+		for i := 0; i < 2; i++ {
+			byteKey, err = term.ReadPassword(int(syscall.Stdin))
+			if err != nil {
+				panic("密钥输入错误")
+			}
+			if len(byteKey) > 0 {
+				break
+			} else if i == 1 {
+				// 最后一次不输入密钥
+				fmt.Println()
+				panic("没有输入密钥...")
+			}
+			fmt.Print("请输入密钥: ")
+		}
+		key = string(byteKey)
+		fmt.Printf("key: %v\n", key)
+		if len([]rune(key)) > len([]rune(msg)) {
+			panic("明文/密文长度太短...")
+		}
+
+		if slct == 1 {
+			fmt.Println("加密结果：")
+			fmt.Println(en_myBubbleSort(key, msg))
+		} else {
+			fmt.Println("解密结果：")
+			fmt.Println(de_mydecryp(key, msg))
+		}
+		fmt.Println()
+		fmt.Println()
 	}
 }
 
