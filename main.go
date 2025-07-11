@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"golang.org/x/term"
@@ -30,11 +31,23 @@ func main() {
 	fmt.Println("请输入明文/密文：")
 	reader := bufio.NewReader(os.Stdin)
 	msg, _ = reader.ReadString('\n')
+	msg = strings.Trim(msg, "\n")
 
 	fmt.Println("请输入密钥(不显示): ")
-	byteKey, err := term.ReadPassword(int(syscall.Stdin))
-	if err != nil {
-		panic("密钥输入错误")
+	byteKey := []byte{}
+	for i := 0; i < 2; i++ {
+		byteKey, err := term.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			panic("密钥输入错误")
+		}
+		if len(byteKey) > 0 {
+			break
+		} else if i == 1 {
+			// 最后一次不输入密钥
+			fmt.Println()
+			panic("没有输入密钥...")
+		}
+		fmt.Print("请输入密钥: ")
 	}
 	key = string(byteKey)
 	fmt.Printf("key: %v\n", key)
@@ -49,24 +62,6 @@ func main() {
 		fmt.Println("解密结果：")
 		fmt.Println(de_mydecryp(key, msg))
 	}
-
-	// var end string
-	// fmt.Scanln(&end)
-	// m := "你好世界我34g45654h4是丁真测你的" //你好世界我是丁真测你的
-	// key := "314sdf5641"          //qweasdzxc12  21cxzdsaewq
-	// fmt.Printf("明文: %v\n", m)
-	// fmt.Printf("密钥: %v\n", key)
-
-	// m2encry := en_myBubbleSort(key, m)
-	// fmt.Printf("密文: %v\n", m2encry)
-	// m_decry := de_mydecryp(key, m2encry)
-	// fmt.Printf("解密: %v\n", m_decry)
-	// if m_decry == m {
-	// 	fmt.Println("success!!!")
-	// } else {
-	// 	panic("fail.....")
-	// }
-
 }
 
 // 加密算法：对密钥排序的过程中，对明文同步进行排序从而实现顺序混淆
@@ -145,14 +140,3 @@ func keyFill(m string, key string) string {
 	}
 	return newKey
 }
-
-// func test() {
-// 	str := "0123abcxyz"
-// 	sss := []rune(str)
-// 	fmt.Printf("sss: %v\n", sss)
-// 	nums := []int{1, 2, 3}
-// 	hash := make(map[rune][]int, 0)
-// 	hash[rune(93)] = nums
-// 	hash[rune(93)] = hash[rune(93)][1:]
-// 	fmt.Printf("hash[rune(93)]: %v\n", hash[rune(93)])
-// }
