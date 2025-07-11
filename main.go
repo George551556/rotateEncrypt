@@ -33,7 +33,7 @@ func main() {
 		fmt.Println("请输入明文/密文：")
 		reader := bufio.NewReader(os.Stdin)
 		msg, _ = reader.ReadString('\n')
-		msg = strings.Trim(msg, "\n")
+		msg = strings.Trim(msg, "\r\n") // win下终端为CRLF(\r\n)换行，所以需要改为去除这个符号
 
 		fmt.Println("请输入密钥(不显示): ")
 		byteKey := []byte{}
